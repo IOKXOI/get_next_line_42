@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 17:46:35 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/28 16:36:31 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/01/29 13:27:23 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,11 +97,14 @@ char	*ft_strdup(char *s)
 }
 
 
-int print_list(S_Lines *list)
+int print_list(S_Lines *list, char *buffer)
 {
 	printf("==============================================\n");
-	printf("          Valeur dans la structure\nID = %d \nSTATUS_LINE = %d\nSTATUS_BUFFER = %d\nLine =%s \nBuffer = %s\n\n",list->id,list->status_line, list->status_buffer, list->line, list->buffer);
+	printf("ID = %d \nSTATUS_LINE = %d\nSTATUS_BUFFER = %d\nLine =%s \nBuffer = %s\nCount_char = %d\n",list->id,list->status_line, list->status_buffer, list->line, list->buffer, list->count_char);
 	printf("==============================================\n");
+	if (!buffer)
+		return (0);
+	printf("buffer = %s\n\n", buffer);
 	return 0;
 }
 

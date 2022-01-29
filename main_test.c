@@ -44,9 +44,10 @@ int main()
 		{
 			str = get_next_line(fd3);
 		}
-printf("LIGNE RETOURNEE =  %s\n", get_next_line(fd3));
+printf("LIGNE RETOURNEE =  %s\n", str);
 printf("------------------------------\n\n");
-	//	free(get_next_line(fd3));
+
+		free(str);
 		i++;
 	}
 	return 0;

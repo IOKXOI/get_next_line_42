@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 23:23:14 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/28 16:32:31 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/01/29 13:27:20 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct t_struct
 	int				id;
 	int				status_line;
 	int				status_buffer;
+	int				count_char;
 	char			*line;
 	char			*buffer;
 	struct t_struct	*next;
@@ -38,7 +39,7 @@ int		check_buff(S_Lines *list);
 int 	free_all(S_Lines *list);
 char	*get_next_line(int fd);
 char	*ft_strdup(char *s);
-int 	print_list(S_Lines *list);
+int 	print_list(S_Lines *list, char *buffer);
 int 	buffer_toline(S_Lines *list);
 
 
