@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 03:19:34 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/29 02:31:28 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/01/30 04:02:03 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int fill_buffer(S_Lines *list, char *buffer, int fd)
 	return (nb);
 }
 
-int	fill_line(S_Lines *list, int nb)
+int	fill_line(S_Lines *list)
 {
 	int		i;
 	char	*temp;
@@ -85,7 +85,7 @@ int	fill_line(S_Lines *list, int nb)
 	temp = NULL;
 	while (i < list->count_char && list->buffer[i] != '\n' && list->buffer[i] != '\0')
 		i++;
-	if (i < list->count_char && list->buffer[i] == '\n');// || list->buffer[i] == '\0') 			//Nous allons copier un \n ou \0, donc la line sera bonne, on passe son status a 1.
+	if (i < list->count_char && list->buffer[i] == '\n')// || list->buffer[i] == '\0') 			//Nous allons copier un \n ou \0, donc la line sera bonne, on passe son status a 1.
 	{
 		list->status_line = 1;
 	}
@@ -93,7 +93,7 @@ int	fill_line(S_Lines *list, int nb)
 	list->line = ft_strjoin(temp, list->buffer, i);						// On joint i charactères de list->buffer à list->line
 	if (++i < list->count_char)														// Si le buffer contient encore des caractères derrieres on dup le reste du buffer dans temp.
 	{
-		temp = ft_strndup(&list->buffer[i], nb);
+		temp = ft_strndup(&list->buffer[i], BUFFER_SIZE);
 		//free(list->buffer);												//On free le list->buffer et on lui assigne ce qui restait dans le buffer.
 		list->buffer = temp;
 		list->status_buffer = 1;										// List->buffer n'est pas vide, on passe son status a 1 pour ne pas read avant utiliser ca.
@@ -103,7 +103,7 @@ int	fill_line(S_Lines *list, int nb)
 		list->status_buffer = 0;										//Si on a mis la totalité de list->buffer dans list->line, alors on passe le status à 0 et on free.
 		//free(list->buffer);
 	}
-	return (nb - i);
+	return (strlen(list->buffer));
 }
 
 char	*get_next_line(int fd)
@@ -135,7 +135,7 @@ char	*get_next_line(int fd)
 
 		}
 
-		list->count_char = fill_line(list, nb);			// On remplis la ligne en utilisant list->buffer. Si en copiant, on se rend compte qu'on copie un \n ou \0, on passe le status_line a 1. Ainsi on sort dde la boucle et on return la line.
+		list->count_char = fill_line(list);			// On remplis la ligne en utilisant list->buffer. Si en copiant, on se rend compte qu'on copie un \n ou \0, on passe le status_line a 1. Ainsi on sort dde la boucle et on return la line.
 	}
 	return (list->line);
 }

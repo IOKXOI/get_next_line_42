@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/17 17:46:35 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/29 13:27:23 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/01/30 01:59:04 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 #include <stddef.h>
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *str)
+int	ft_strlen(char *str)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!str)
@@ -30,7 +30,7 @@ size_t	ft_strlen(char *str)
 char	*ft_strjoin(char *s1, char *s2, int k)
 {
 	char	*s3;
-	size_t	i;
+	int 		i;
 	size_t	j;
 
 	i = 0;
@@ -100,7 +100,7 @@ char	*ft_strdup(char *s)
 int print_list(S_Lines *list, char *buffer)
 {
 	printf("==============================================\n");
-	printf("ID = %d \nSTATUS_LINE = %d\nSTATUS_BUFFER = %d\nLine =%s \nBuffer = %s\nCount_char = %d\n",list->id,list->status_line, list->status_buffer, list->line, list->buffer, list->count_char);
+	printf("ID = %d \nSTATUS_LINE = %d\nSTATUS_BUFFER = %d\nLine =%s \nBuffer = %s\buffer_residue = %d\n",list->id,list->status_line, list->status_buffer, list->line, list->buffer, list->count_char);
 	printf("==============================================\n");
 	if (!buffer)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 23:23:14 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/29 13:27:20 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/01/30 04:02:00 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ char	*get_next_line(int fd);
 char	*ft_strdup(char *s);
 int 	print_list(S_Lines *list, char *buffer);
 int 	buffer_toline(S_Lines *list);
+int		ft_strlen(char *str);
 
 
 
