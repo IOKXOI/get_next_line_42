@@ -18,7 +18,7 @@ int main()
 	//	fd1 = open("test1", O_RDONLY);
 	//	fd2 = open("test2", O_RDONLY);
 	//	fd4 = open("test4", O_RDONLY);
-	while (i < 6)
+	while (i < 1)
 	{
 		if (i == 0)
 		{
@@ -45,7 +45,7 @@ int main()
 			str = get_next_line(fd3);
 		}
 printf("LIGNE RETOURNEE =  %s\n", str);
-printf("------------------------------\n\n");
+printf("------------------------------i = %d \n" , i);
 
 		free(str);
 		i++;

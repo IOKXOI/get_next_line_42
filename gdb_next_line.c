@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/14 03:19:34 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/30 04:02:03 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/02/03 06:14:34 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,126 +16,114 @@
 #include "get_next_line.h"
 #include <string.h>
 
-S_Lines *where_is_my_list(int fd, S_Lines *first)
+t_Lines *where_is_my_list(int fd, t_Lines *first)
 {
-	S_Lines *list;
+	t_Lines *list;
 	list = first;
 	if (list == NULL)
 		return (NULL);
 	while (list->next && list->id != fd)
 		list = list->next;
 	if (list->id == fd)
+	{
+		list->line = NULL;
+		list->status_line = 0;
 		return (list);
+	}
 	return (NULL);
 }
 
-S_Lines *create_node(int fd, S_Lines *first)
+t_Lines *create_node(int fd, t_Lines *first)
 {
-	S_Lines *new_link;
+	t_Lines *new_link;
 
-	if (first == NULL)
-	{
-		first = malloc(sizeof(S_Lines));
-		if (!first)
-			return (NULL);
-		first->id = fd;
-		first->status_line = 0;
-		first->status_buffer = 0;
-		first->count_char = BUFFER_SIZE;
-		first->next = NULL;
-		first->line = NULL;
-		first->buffer = NULL;
-		return (first);
-	}
-	new_link = malloc(sizeof(S_Lines));
+	new_link = malloc(sizeof(t_Lines));
 	if (!new_link)
 		return (NULL);
+	new_link->prev = NULL;
 	new_link->id = fd;
 	new_link->status_line = 0;
 	new_link->status_buffer = 0;
-	new_link->count_char = BUFFER_SIZE;
 	new_link->line = NULL;
-	new_link->buffer = NULL;
-	new_link->next = first;
-	return (new_link);
-}
-
-int fill_buffer(S_Lines *list, char *buffer, int fd)
-{
-	int	nb;
-
-	if (list->status_buffer == 0)
-
+	new_link->buffer[BUFFER_SIZE] = '\0';
+	if (first == NULL)
 	{
-		nb = read(fd, buffer, BUFFER_SIZE);
-		if (nb < 1)
-			return (0);
-		list->buffer = ft_strndup(buffer, nb);
-		list->status_buffer = 1;
+		new_link->next = NULL;
+		first = new_link;
+		return (first);
 	}
-	return (nb);
+	new_link->next = first;
+	first->prev = new_link;
+	first = new_link;
+	return (first);
 }
 
-int	fill_line(S_Lines *list)
+char	*fill_line(t_Lines *list)
 {
-	int		i;
-	char	*temp;
+	size_t		i;
+	size_t		j;
+	char		*str;
 
 	i = 0;
-	temp = NULL;
-	while (i < list->count_char && list->buffer[i] != '\n' && list->buffer[i] != '\0')
+	j = -1;
+	str = NULL;
+	while (list->buffer[i] && list->buffer[i] != '\n')
 		i++;
-	if (i < list->count_char && list->buffer[i] == '\n')// || list->buffer[i] == '\0') 			//Nous allons copier un \n ou \0, donc la line sera bonne, on passe son status a 1.
-	{
+	str = malloc(sizeof(char) * (i + 1));
+	while (++j <= i)
+		str[j] = list->buffer[j];
+	if (str[i] == '\n')
 		list->status_line = 1;
-	}
-	temp = ft_strdup(list->line);
-	list->line = ft_strjoin(temp, list->buffer, i);						// On joint i charactères de list->buffer à list->line
-	if (++i < list->count_char)														// Si le buffer contient encore des caractères derrieres on dup le reste du buffer dans temp.
-	{
-		temp = ft_strndup(&list->buffer[i], BUFFER_SIZE);
-		//free(list->buffer);												//On free le list->buffer et on lui assigne ce qui restait dans le buffer.
-		list->buffer = temp;
-		list->status_buffer = 1;										// List->buffer n'est pas vide, on passe son status a 1 pour ne pas read avant utiliser ca.
-	}
-	else
-	{
-		list->status_buffer = 0;										//Si on a mis la totalité de list->buffer dans list->line, alors on passe le status à 0 et on free.
-		//free(list->buffer);
-	}
-	return (strlen(list->buffer));
+//	ft_memmove(list->buffer[0], list->buffer[i], i);
+	if (!list->buffer[0])
+		list->status_buffer = 0;
+	return (str);
+}
+
+char	*ft_strjoin(char *s1, char *s2, int k)
+{
+	char	*s3;
+	int 	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	if (!s1)
+		return (s2);
+	if(!s2)
+		return (s1);
+	s3 = malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!s3)
+		return (NULL);
+	while (s1[i])
+		s3[j++] = s1[i++];
+	i = 0;
+	while (s2[i] && i <= k)
+		s3[j++] = s2[i++];
+	s3[j] = '\0';
+	free(s1);
+	return (s3);
 }
 
 char	*get_next_line(int fd)
 {
-	int				nb;
-	char			buffer[BUFFER_SIZE + 1];
-	S_Lines			*list;
-	static S_Lines	*first = NULL;
+	t_Lines			*list;
+	static t_Lines	*first = NULL;
+	char			*str;
 
-	buffer[BUFFER_SIZE] = '\0';
-	list = where_is_my_list(fd, first); // Fonction qui cherche la liste correspondante au fd. Si on ne la trouve pas (peut etre est elle inexistante), on return NULL.
-
-
+	str = NULL;	
+	list = where_is_my_list(fd, first); 
 	if (list == NULL)
+		list = create_node(fd, first);  
+	while (list->status_line != 1)
 	{
-		list = create_node(fd, first);  // La liste n'existe pas, nous la créons, et nous la mettons en premier. Toute les valeurs sont initialisées sur NULL ou 0.
-		first = list;
-	}
-	//if(!list->status_line)
-
-	list->status_line = 0;              // Status_line indique par 0, que la line ne contient pas de \n ou \0. Nous l'initialisons a 0, car lorsque l'on return la ligne correctement, cela veut dire que la valeur est sur 1.
-	while (list->status_line != 1)		// On boucle tant que la ligne ne contient pas de \n ou \0.
-	{
-		if (list->status_buffer == 0)	// Status_buffer == 0 veut dire que le list->buffer est vide. On doit donc dup le char *buffer que l'on remplis avec read().
+		if (list->status_buffer == 0)	
 		{
-			nb = fill_buffer(list, buffer, fd);
-			if (nb < 1)
-				return ("FINITO");//free_all(list));
-
+			if (read(fd, list->buffer, BUFFER_SIZE) < 1)
+				return (list_delone(list, first));
+			list->status_buffer = 1;
 		}
-
-		list->count_char = fill_line(list);			// On remplis la ligne en utilisant list->buffer. Si en copiant, on se rend compte qu'on copie un \n ou \0, on passe le status_line a 1. Ainsi on sort dde la boucle et on return la line.
+		str = ft_strjoin(str, fill_line(list));
 	}
-	return (list->line);
+	return (str);
 }

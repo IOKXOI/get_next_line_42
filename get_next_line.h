@@ -6,7 +6,7 @@
 /*   By: sydauria <sydauria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/20 23:23:14 by sydauria          #+#    #+#             */
-/*   Updated: 2022/01/30 04:02:00 by sydauria         ###   ########.fr       */
+/*   Updated: 2022/02/03 06:14:40 by sydauria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,28 +20,26 @@
 #include <fcntl.h>
 
 
-typedef struct t_struct
+typedef struct s_struct
 {
+	struct s_struct	*prev;
 	int				id;
 	int				status_line;
 	int				status_buffer;
-	int				count_char;
 	char			*line;
-	char			*buffer;
-	struct t_struct	*next;
-}	S_Lines;
+	char			buffer[BUFFER_SIZE + 1];
+	struct s_struct	*next;
+}	t_Lines;
 
 char	*ft_strjoin(char *s1, char *s2, int k);
 char	*ft_strndup(char *s, int count);
-S_Lines *where_is_my_list(int fd, S_Lines *first);
-S_Lines *create_node(int fd, S_Lines *first);
-int		check_buff(S_Lines *list);
-int 	free_all(S_Lines *list);
+t_Lines	*where_is_my_list(int fd, t_Lines *first);
+t_Lines	*create_node(int fd, t_Lines *first);
 char	*get_next_line(int fd);
 char	*ft_strdup(char *s);
-int 	print_list(S_Lines *list, char *buffer);
-int 	buffer_toline(S_Lines *list);
+int 	buffer_toline(t_Lines *list);
 int		ft_strlen(char *str);
+char	*list_delone(t_Lines *list, t_Lines *first);
 
 
 
